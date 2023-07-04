@@ -69,8 +69,9 @@ class BankAcctountModel {
     print("");
     print("------------------------------------------");
     print("Olá! ${user.name} :) ");
+    print("");
     print("Seu saldo é: ${this.balance}");
-    print("Sua conta é do tipo ${this.type.description}");
+    print("Sua conta é do tipo:  ${this.type.description}");
     print("------------------------------------------");
     print("");
     operationsHistory.add(OperationModel("Ver informações da minha conta bancária", 0));

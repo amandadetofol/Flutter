@@ -1,5 +1,5 @@
-
-import 'package:animal_app/testes/image.dart';
+import 'package:animal_app/testes/column.dart';
+import 'package:animal_app/testes/row.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
@@ -7,20 +7,43 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context){
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: Container(
         color: Colors.white,
-        child:  LearningImage()  
-      ),
+        child: 
+          Column(
+             mainAxisAlignment: MainAxisAlignment.center,
+             mainAxisSize: MainAxisSize.max,
+             children: [
+                const Text("Cute Dogs",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold, 
+                    color: Colors.black,
+                  )
+                ),
+                Image.asset(
+                  height: size.width,
+                  width: size.width, 
+                  fit: BoxFit.cover, 
+                  "lib/assets/images/dog2.png"),
+                ElevatedButton(onPressed:(){
+                  print("Like this dog");
+                }
+                , child: Text("Love"))  
+              ],
+          )
+        ),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 41, 74, 46),
+        backgroundColor: Color.fromARGB(255, 186, 161, 103),
         title: const Text(
-          "Bem-Vindo!",
+          "Welcome",
           style: TextStyle(
             fontWeight: FontWeight.bold),
             )
         )
       );
   }
-
 }

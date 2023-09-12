@@ -1,8 +1,11 @@
-
+import 'package:animal_app/testes/pages/hello_page1.dart';
 import 'package:flutter/material.dart';
 
 final class LearningButton extends StatelessWidget {
-   const LearningButton({super.key});
+  String text = "";
+  VoidCallback onPressed;
+
+  LearningButton({super.key, required this.text, required this.onPressed});
 
   @override
   Widget build(BuildContext context){
@@ -10,18 +13,13 @@ final class LearningButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.red),
         onPressed: () {
-          onClickOk("Botao Pressionado");
+          onPressed();
         },
-        child: const Text(
-          'Meu Botão', 
+        child: Text(
+          text, 
           style: TextStyle(
             backgroundColor: Colors.red),
             ), 
     );
   }
-
-  void onClickOk(String message){
-    print(message);
-  }
-
 }

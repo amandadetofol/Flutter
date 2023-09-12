@@ -1,5 +1,7 @@
-import 'package:animal_app/testes/column.dart';
-import 'package:animal_app/testes/row.dart';
+import 'package:animal_app/testes/button.dart';
+import 'package:animal_app/testes/pages/hello_page1.dart';
+import 'package:animal_app/testes/pages/hello_page2.dart';
+import 'package:animal_app/testes/pages/hello_page3.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
@@ -7,35 +9,25 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context){
-    Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: Container(
-        color: Colors.white,
-        child: 
-          Column(
-             mainAxisAlignment: MainAxisAlignment.center,
-             mainAxisSize: MainAxisSize.max,
-             children: [
-                const Text("Cute Dogs",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold, 
-                    color: Colors.black,
-                  )
-                ),
-                Image.asset(
-                  height: size.width,
-                  width: size.width, 
-                  fit: BoxFit.cover, 
-                  "lib/assets/images/dog2.png"),
-                ElevatedButton(onPressed:(){
-                  print("Like this dog");
-                }
-                , child: Text("Love"))  
-              ],
-          )
+      body:
+       Padding(
+        padding: const EdgeInsets.all(16), 
+        child: Container(
+          color: Colors.white,
+          child: 
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                    _title(),
+                    _pageView(context),
+                    _column(context),
+                ],
+            )
         ),
+      ),
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 186, 161, 103),
         title: const Text(
@@ -46,4 +38,106 @@ class Home extends StatelessWidget {
         )
       );
   }
+
+  _column(BuildContext context){
+    return Column(children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children:
+          [LearningButton(text: 'List View', onPressed: () { 
+              _handleListViewButtonTap(context);
+           },),
+            LearningButton(text: 'Page 2',onPressed: () { 
+              _handlePage2ButtonTap(context);
+           },),
+            LearningButton(text: 'Page 3',onPressed: () { 
+              _handlePage3ButtonTap(context);
+           },)]),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children:
+          [ LearningButton(text: 'Snack',onPressed: () { 
+              _handleSnackButtonTap(context);
+           },),
+            LearningButton(text: 'Dialog', onPressed: () { 
+              _handleDialogButtonTap(context);
+           },),
+            LearningButton(text: 'Toast',onPressed: () { 
+              _handleToastButtonTap(context);
+           },),
+          ]) 
+      ],
+    );
+  }
+
+  _handleListViewButtonTap(BuildContext context){
+    goToNavigator(context, const HelloPage1());
+  }
+
+  _handlePage2ButtonTap(BuildContext context){
+    goToNavigator(context, const HelloPage2());
+  }
+
+  _handlePage3ButtonTap(BuildContext context){
+    goToNavigator(context, const HelloPage3());
+  }
+
+  _handleSnackButtonTap(BuildContext context){
+    print(context);
+  }
+
+  _handleDialogButtonTap(BuildContext context){
+    print(context);
+  }
+
+  _handleToastButtonTap(BuildContext context){
+    print(context);
+  }
+
+  goToNavigator( 
+    BuildContext context,
+    Widget page){
+      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+        return page;
+      }));
+  }
+
+  _image(
+    BuildContext context, 
+   {required String img}){
+      Size size = MediaQuery.of(context).size;
+
+      return Image.asset(
+          height: size.width,
+          width: size.width, 
+          fit: BoxFit.cover, 
+          img);
+    }
+
+  _title(){
+    return const Text(
+      "Cute Dogs",
+      style: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold, 
+        color: Colors.black,
+      )
+    );
+  }
+
+  _pageView(BuildContext context){
+     return Container(
+        margin: EdgeInsets.all(10),
+        height: 300, 
+        child:PageView(children: [
+            _image(context, img: "lib/assets/images/dog1.png"),
+            _image(context, img: "lib/assets/images/dog2.png"),
+            _image(context, img: "lib/assets/images/dog3.png"),
+            _image(context, img: "lib/assets/images/dog4.png"),
+            _image(context, img: "lib/assets/images/dog5.png"),
+        ],
+        ),
+      );
+  }
+
 }

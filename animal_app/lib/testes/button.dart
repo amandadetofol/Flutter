@@ -1,4 +1,4 @@
-import 'package:animal_app/testes/pages/hello_page1.dart';
+
 import 'package:flutter/material.dart';
 
 final class LearningButton extends StatelessWidget {
@@ -17,7 +17,7 @@ final class LearningButton extends StatelessWidget {
         },
         child: Text(
           text, 
-          style: TextStyle(
+          style: const TextStyle(
             backgroundColor: Colors.red),
             ), 
     );

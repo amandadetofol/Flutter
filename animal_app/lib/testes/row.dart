@@ -1,5 +1,5 @@
 import 'package:animal_app/testes/button.dart';
-import 'package:animal_app/testes/pages/hello_page1.dart';
+import 'package:animal_app/pages/hello_page1.dart';
 import 'package:flutter/material.dart';
 
 final class LearningRow extends StatelessWidget {

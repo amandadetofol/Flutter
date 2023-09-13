@@ -1,4 +1,4 @@
-import 'package:animal_app/home_page.dart';
+import 'package:animal_app/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {

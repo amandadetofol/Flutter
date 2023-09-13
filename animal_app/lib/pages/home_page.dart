@@ -1,7 +1,10 @@
 import 'package:animal_app/testes/button.dart';
-import 'package:animal_app/testes/pages/hello_page1.dart';
-import 'package:animal_app/testes/pages/hello_page2.dart';
-import 'package:animal_app/testes/pages/hello_page3.dart';
+import 'package:animal_app/pages/hello_listview.dart';
+import 'package:animal_app/pages/hello_page1.dart';
+import 'package:animal_app/pages/hello_page2.dart';
+import 'package:animal_app/pages/hello_page3.dart';
+import 'package:animal_app/testes/expanded.dart';
+import 'package:animal_app/utils/nav.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
@@ -17,6 +20,7 @@ class Home extends StatelessWidget {
         child: Container(
           color: Colors.white,
           child: 
+            //Column nao expande autaticamente, preciso sempre colocar um tamanho
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
@@ -46,32 +50,46 @@ class Home extends StatelessWidget {
           children:
           [LearningButton(text: 'List View', onPressed: () { 
               _handleListViewButtonTap(context);
-           },),
+           },
+          ),
             LearningButton(text: 'Page 2',onPressed: () { 
               _handlePage2ButtonTap(context);
-           },),
+           },
+          ),
             LearningButton(text: 'Page 3',onPressed: () { 
               _handlePage3ButtonTap(context);
-           },)]),
+           },
+          ),
+           LearningButton(text: 'Expanded',onPressed: () { 
+              _handleExpandedButtonTap(context);
+           },)
+        ]),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children:
           [ LearningButton(text: 'Snack',onPressed: () { 
               _handleSnackButtonTap(context);
-           },),
+           },
+          ),
             LearningButton(text: 'Dialog', onPressed: () { 
               _handleDialogButtonTap(context);
-           },),
+           },
+          ),
             LearningButton(text: 'Toast',onPressed: () { 
               _handleToastButtonTap(context);
-           },),
-          ]) 
+           },
+         ),
+        ]) 
       ],
     );
   }
 
+  _handleExpandedButtonTap(BuildContext context){
+    goToNavigator(context, ExpandedLearning());
+  }
+
   _handleListViewButtonTap(BuildContext context){
-    goToNavigator(context, const HelloPage1());
+    goToNavigator(context, const HelloListView());
   }
 
   _handlePage2ButtonTap(BuildContext context){
@@ -94,12 +112,12 @@ class Home extends StatelessWidget {
     print(context);
   }
 
+  
   goToNavigator( 
     BuildContext context,
-    Widget page){
-      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-        return page;
-      }));
+    Widget page) async {
+      String s = await push(context, page);
+      print("Conteúdo retornado $s");
   }
 
   _image(

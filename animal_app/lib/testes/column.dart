@@ -1,7 +1,7 @@
 import 'package:animal_app/testes/button.dart';
 import 'package:flutter/material.dart';
 
-import 'pages/hello_page1.dart';
+import '../pages/hello_page1.dart';
 
 final class LearningColumn extends StatelessWidget{
   const LearningColumn({super.key});

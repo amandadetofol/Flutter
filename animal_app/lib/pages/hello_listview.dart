@@ -1,4 +1,5 @@
 
+import 'package:animal_app/pages/hello_gridview.dart';
 import 'package:flutter/material.dart';
 
 final class HelloListView extends StatelessWidget {
@@ -17,12 +18,21 @@ final class HelloListView extends StatelessWidget {
 
   _body(BuildContext context){
 
+    /*
     final imgs = [
         _image(context, img: "lib/assets/images/dog1.png"),
         _image(context, img: "lib/assets/images/dog2.png"),
         _image(context, img: "lib/assets/images/dog3.png"),
         _image(context, img: "lib/assets/images/dog4.png"),
         _image(context, img: "lib/assets/images/dog5.png"),
+    ];*/
+
+    final dogs = [
+      Dog("Jack Russel","lib/assets/images/dog1.png"),
+      Dog("Labrador","lib/assets/images/dog2.png"),
+      Dog("Pug","lib/assets/images/dog3.png"),
+      Dog("RotWeiler","lib/assets/images/dog4.png"),
+      Dog("Pastor","lib/assets/images/dog5.png"),
     ];
 
     /* Container(child:
@@ -35,10 +45,33 @@ final class HelloListView extends StatelessWidget {
     );*/
 
     return ListView.builder(
-      itemCount: imgs.length,
+      itemCount: dogs.length,
       itemExtent: 300,
       itemBuilder: (BuildContext context, index) {
-        return imgs[index];
+        var dog = dogs[index];
+        return Stack(
+          children: [
+            _image(context, img: dog.foto), 
+            Container(
+              alignment: Alignment.bottomRight,
+              child: Container(
+                  margin: EdgeInsets.all(16),
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.black45),
+                  child: Text(
+                  dog.nome, 
+                  style: const TextStyle(
+                    fontSize: 30, 
+                    color: Colors.white, 
+                    fontWeight: FontWeight.bold,),
+                  ),  
+                )
+              )
+            ]
+        );
+
     });
   }
 
@@ -53,6 +86,4 @@ final class HelloListView extends StatelessWidget {
           fit: BoxFit.cover, 
           img);
     }
-
-
 }

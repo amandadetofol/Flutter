@@ -1,3 +1,4 @@
+import 'package:animal_app/pages/hello_gridview.dart';
 import 'package:animal_app/testes/button.dart';
 import 'package:animal_app/pages/hello_listview.dart';
 import 'package:animal_app/pages/hello_page1.dart';
@@ -62,7 +63,8 @@ class Home extends StatelessWidget {
           ),
            LearningButton(text: 'Expanded',onPressed: () { 
               _handleExpandedButtonTap(context);
-           },)
+           },),
+          
         ]),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -79,6 +81,9 @@ class Home extends StatelessWidget {
               _handleToastButtonTap(context);
            },
          ),
+          LearningButton(text: 'GridView',onPressed: () { 
+              _handleGridViewButtonTap(context);
+           },)
         ]) 
       ],
     );
@@ -94,6 +99,10 @@ class Home extends StatelessWidget {
 
   _handlePage2ButtonTap(BuildContext context){
     goToNavigator(context, const HelloPage2());
+  }
+
+  _handleGridViewButtonTap(BuildContext context){
+    goToNavigator(context, HelloGridView());
   }
 
   _handlePage3ButtonTap(BuildContext context){

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_app/todo_card.dart';
+import 'package:todo_app/components/todo_card.dart';
 
 final class HomePage extends StatefulWidget {
   bool opacidade = true;

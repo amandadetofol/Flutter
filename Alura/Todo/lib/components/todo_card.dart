@@ -4,9 +4,9 @@ import 'package:todo_app/components/difficulty.dart';
 final class TodoCard extends StatefulWidget {
   final String taskName;
   final String foto;
-  final int dificuldade;
+  final int dificulty;
 
-  const TodoCard(this.taskName, this.foto, this.dificuldade, {super.key});
+  const TodoCard(this.taskName, this.foto, this.dificulty, {super.key});
 
   @override
   State<TodoCard> createState() => _TodoCardState();
@@ -59,7 +59,7 @@ class _TodoCardState extends State<TodoCard> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
+                        SizedBox(
                           height: 40,
                           width: 150,
                           child: Text(
@@ -70,7 +70,7 @@ class _TodoCardState extends State<TodoCard> {
                                 overflow: TextOverflow.ellipsis),
                           ),
                         ),
-                        DifficultyStars(dificuldade: widget.dificuldade),
+                        DifficultyStars(dificuldade: widget.dificulty),
                       ],
                     ),
                     ElevatedButton(
@@ -79,10 +79,10 @@ class _TodoCardState extends State<TodoCard> {
                           nivel++;
                         });
                       },
-                      child: Container(
+                      child: const SizedBox(
                         height: 35,
                         width: 20,
-                        child: const Column(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -106,11 +106,11 @@ class _TodoCardState extends State<TodoCard> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
+                    SizedBox(
                       width: 200,
                       child: LinearProgressIndicator(
                         color: Colors.white,
-                        value: (nivel / widget.dificuldade) / 10,
+                        value: (nivel / widget.dificulty) / 10,
                       ),
                     ),
                     Text("Nível: $nivel",

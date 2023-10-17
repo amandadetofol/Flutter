@@ -14,6 +14,14 @@ final class TodoCard extends StatefulWidget {
 
 class _TodoCardState extends State<TodoCard> {
   int nivel = 0;
+  Color backgroundColor = Colors.pink;
+  List<MaterialColor> colors = [
+    Colors.pink,
+    Colors.green,
+    Colors.yellow,
+    Colors.red,
+    Colors.purple,
+    Colors.indigo];
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +32,7 @@ class _TodoCardState extends State<TodoCard> {
           Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
-                color: Colors.pink,
+                color: backgroundColor,
               ),
               height: 140),
           Column(
@@ -77,6 +85,11 @@ class _TodoCardState extends State<TodoCard> {
                       onPressed: () {
                         setState(() {
                           nivel++;
+
+                          if (nivel == (10*widget.dificulty)){
+                            nivel = 0;
+                            backgroundColor = _getColor(backgroundColor);
+                          }
                         });
                       },
                       child: const SizedBox(
@@ -126,5 +139,17 @@ class _TodoCardState extends State<TodoCard> {
         ],
       ),
     );
+  }
+
+  Color _getColor(Color currentColor){
+    int indexCorProcurada = colors.indexWhere((color) => color == currentColor);
+
+    if (indexCorProcurada != -1) {
+      int proximoIndice = (indexCorProcurada + 1) % colors.length;
+      Color proximaCor = colors[proximoIndice];
+      return proximaCor;
+    } else {
+      return Colors.white;
+    }
   }
 }

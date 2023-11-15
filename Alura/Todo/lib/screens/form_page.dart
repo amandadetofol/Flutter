@@ -1,6 +1,15 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:todo_app/components/todo_card.dart';
+import 'package:todo_app/data/task_inherited.dart';
+import 'package:todo_app/database/task_dao.dart';
 
 final class FormPage extends StatefulWidget {
+  final BuildContext context;
+
+  const FormPage({super.key, required this.context});
+
   @override
   State<FormPage> createState() => _FormPageState();
 }
@@ -11,6 +20,16 @@ class _FormPageState extends State<FormPage> {
   TextEditingController imageController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  bool valueValidator(String? value) {
+    return value != null && value.isEmpty;
+  }
+
+  bool difficultyValidator(String? value) {
+    return valueValidator(value) ||
+        int.parse(value!) > 5 ||
+        int.parse(value!) < 1;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -18,12 +37,10 @@ class _FormPageState extends State<FormPage> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.pink,
-          title: const Center(
-            child: Text(
-              "Nova Tarefa",
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
+          title: Text(
+            "Nova Tarefa",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
         body: Padding(
@@ -31,7 +48,6 @@ class _FormPageState extends State<FormPage> {
           child: SingleChildScrollView(
             child: Center(
               child: Container(
-
                 width: 375,
                 decoration: BoxDecoration(
                   color: Colors.black12,
@@ -45,8 +61,8 @@ class _FormPageState extends State<FormPage> {
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: TextFormField(
-                        validator: (String? value){
-                          if (value!=null && value.isEmpty){
+                        validator: (String? value) {
+                          if (valueValidator(value)) {
                             return "Campo obrigatório";
                           }
                           return null;
@@ -64,9 +80,8 @@ class _FormPageState extends State<FormPage> {
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: TextFormField(
-                        validator: (String? value){
-                          if (int.parse(value!) > 5
-                              ||  int.parse(value!) < 1){
+                        validator: (String? value) {
+                          if (difficultyValidator(value)) {
                             return "O valor precisa ser um número entre 1 e 5.";
                           }
                           return null;
@@ -85,8 +100,8 @@ class _FormPageState extends State<FormPage> {
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: TextFormField(
-                        validator: (String? value){
-                          if (value!=null && value.isEmpty){
+                        validator: (String? value) {
+                          if (valueValidator(value)) {
                             return "Campo obrigatório";
                           }
                           return null;
@@ -116,7 +131,8 @@ class _FormPageState extends State<FormPage> {
                         ),
                         child: ClipRRect(
                           child: Image.network(
-                            errorBuilder: (BuildContext context, Object object, StackTrace? stackTrace){
+                            errorBuilder: (BuildContext context, Object object,
+                                StackTrace? stackTrace) {
                               return Icon(Icons.camera_alt_sharp);
                             },
                             imageController.text,
@@ -132,14 +148,12 @@ class _FormPageState extends State<FormPage> {
                             backgroundColor:
                                 MaterialStateProperty.all<Color?>(Colors.pink)),
                         onPressed: () {
-                          if (_formKey.currentState!.validate()){
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    elevation: 150.0,
-                                    behavior: SnackBarBehavior.floating,
-                                    content: Text("Salvando nova tarefa...")
-                                )
-                            );
+                          if (_formKey.currentState!.validate()) {
+                            TaskDao().save(TodoCard(
+                                nameController.text,
+                                imageController.text,
+                               int.parse(difficultyController.text)));
+                            Navigator.pop(context);
                           }
                         },
                         child: Container(

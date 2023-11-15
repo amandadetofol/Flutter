@@ -5,15 +5,16 @@ final class TodoCard extends StatefulWidget {
   final String taskName;
   final String foto;
   final int dificulty;
+  int nivel = 0;
 
-  const TodoCard(this.taskName, this.foto, this.dificulty, {super.key});
+  TodoCard(this.taskName, this.foto, this.dificulty, {super.key});
 
   @override
   State<TodoCard> createState() => _TodoCardState();
 }
 
 class _TodoCardState extends State<TodoCard> {
-  int nivel = 0;
+
   Color backgroundColor = Colors.pink;
   List<MaterialColor> colors = [
     Colors.pink,
@@ -84,10 +85,10 @@ class _TodoCardState extends State<TodoCard> {
                     ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          nivel++;
+                          widget.nivel++;
 
-                          if (nivel == (10*widget.dificulty)){
-                            nivel = 0;
+                          if (widget.nivel == (10*widget.dificulty)){
+                            widget.nivel = 0;
                             backgroundColor = _getColor(backgroundColor);
                           }
                         });
@@ -123,10 +124,10 @@ class _TodoCardState extends State<TodoCard> {
                       width: 200,
                       child: LinearProgressIndicator(
                         color: Colors.white,
-                        value: (nivel / widget.dificulty) / 10,
+                        value: (widget.nivel / widget.dificulty) / 10,
                       ),
                     ),
-                    Text("Nível: $nivel",
+                    Text("Nível: ${widget.nivel}",
                         style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,

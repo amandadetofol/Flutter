@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_app/components/global_level.dart';
 import 'package:todo_app/components/todo_card.dart';
+import 'package:todo_app/data/task_inherited.dart';
+import 'package:todo_app/database/task_dao.dart';
+import 'package:todo_app/screens/form_page.dart';
 
-final class HomePage extends StatefulWidget {
+class HomePage extends StatefulWidget {
   bool opacidade = true;
   IconData icon = Icons.remove_red_eye;
 
@@ -16,46 +20,111 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            setState(() {
-              widget.opacidade = !widget.opacidade;
-              widget.icon = widget.opacidade
-                  ? Icons.visibility_off
-                  : Icons.remove_red_eye;
-            });
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (newContext) => FormPage(
+                        context: context,
+                      )),
+            ).then((value) => setState((){}));
           },
           backgroundColor: Colors.pink,
-          child: Icon(widget.icon, color: Colors.white),
+          child: const Icon(Icons.add, color: Colors.white),
         ),
         appBar: AppBar(
-          backgroundColor: Colors.pink,
-          title: const Center(
-            child: Text(
-              "Tarefas",
-              textAlign: TextAlign.center,
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            leading: Center(
+              child: IconButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color?>(Colors.pink),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      widget.opacidade = !widget.opacidade;
+                      widget.icon = widget.opacidade
+                          ? Icons.visibility_off
+                          : Icons.remove_red_eye;
+                    });
+                  },
+                  icon: Icon(widget.icon, color: Colors.white)),
             ),
-          ),
-        ),
+            backgroundColor: Colors.pink,
+            title: Column(
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                const SizedBox(
+                  child: Text(
+                    "Tarefas",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+            )),
         body: AnimatedOpacity(
-          duration: Duration(seconds: 1),
+          duration: const Duration(seconds: 1),
           opacity: widget.opacidade ? 1 : 0,
-          child: ListView(
-            children: const [
-              TodoCard(
-                  'Aprender Flutter',
-                  "https://pbs.twimg.com/media/Eu7m692XIAEvxxP?format=png&name=large",
-                  3),
-              TodoCard(
-                  'Andar de Bike',
-                  "https://jasminealimentos.com/wp-content/uploads/2022/06/Blog1_IMG_1-1-860x485.png",
-                  2),
-              TodoCard(
-                  'Meditar',
-                  "https://catracalivre.com.br/wp-content/uploads/sites/19/2017/05/Medita%C3%A7%C3%A3o-iStock.jpg",
-                  5),
-              SizedBox(height: 100),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: FutureBuilder<List<TodoCard>>(
+              future: TaskDao().findAll(),
+              builder: (context, snapshot) {
+                List<TodoCard>? items = snapshot.data;
+                switch (snapshot.connectionState) {
+                  case ConnectionState.none:
+                    return Container(
+                      child: const Center(
+                        child: Text("Conectando ao banco..."),
+                      ),
+                    );
+
+                  case ConnectionState.waiting:
+                    return Container(
+                      child: const Center(
+                        child: Text("Carregando..."),
+                      ),
+                    );
+
+                  case ConnectionState.active:
+                    return Container(
+                      child: const Center(
+                        child: Text("Conexão estabelecida com banco de dados..."),
+                      ),
+                    );
+
+                  case ConnectionState.done:
+                    if (snapshot.hasData && items != null) {
+                      if (items.isNotEmpty) {
+                        return ListView.builder(
+                            itemCount: items.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final task = items[index];
+                              return task;
+                            });
+                      } else {
+                        return Container(
+                          child: const Center(
+                            child: Text("Nenhuma tarefa encontrada."),
+                          ),
+                        );
+                      }
+                    } else {
+                      return Container(
+                        child: const Center(
+                          child: Text("Nenhuma tarefa encontrada."),
+                        ),
+                      );
+                    }
+
+                }
+              },
+            ),
           ),
         ));
   }

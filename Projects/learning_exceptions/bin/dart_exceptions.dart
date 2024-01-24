@@ -1,8 +1,11 @@
 import 'controllers/bank_controller.dart';
 import 'models/account.dart';
 import 'exception/bank_controller_exceptions.dart';
+import 'dart:math';
 
 void main() {
+testingNullSafety();
+
   // Criando o banco
   BankController bankController = BankController();
 
@@ -26,7 +29,7 @@ void main() {
   // Fazendo transferência
   try {
     bool result = bankController.makeTransfer(
-          idSender: "Kdako", 
+          idSender: "Kako", 
           idReceiver: "Ricarth", 
           amount: 10);
 
@@ -48,4 +51,23 @@ void main() {
     print(notMappedError.toString());
   }
 
+}
+
+
+void testingNullSafety(){
+  Account? account; 
+
+  //simulando uma comunicacao externa 
+  Random rng = Random();
+  int randomNumber = rng.nextInt(10);
+
+  if(randomNumber <= 5){
+    account = Account(
+             name: "Ricarth Lima",
+             balance: 400, 
+             isAuthenticated: true);
+  }
+
+  print(account.runtimeType);
+  print(account?.balance ?? 0);
 }

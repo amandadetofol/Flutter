@@ -6,7 +6,7 @@ import '../models/journal.dart';
 
 class JournalService {
 
-  static const String url = "http://192.168.1.5:3000/";
+  static const String url = "http://192.168.1.7:3000/";
   static const String resource = "journals";
 
   String getUrl(){
@@ -29,6 +29,27 @@ class JournalService {
     return list;
   }
 
+  Future<bool> edit(String id, Journal journal) async {
+    String jsonJournal = json.encode({
+      'id': journal.id,
+      'content': journal.content,
+      'created_at': journal.createdAt.toString(),
+      'updated_at': journal.updatedAt.toString(),
+    });
+
+    http.Response response = await http.put(
+      Uri.parse("${getUrl()}/$id"),
+      headers: {'Content-type': 'application/json'},
+      body: jsonJournal,
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+
+    return false;
+  }
+
   Future<bool> register(Journal journal) async {
     http.Response response = await http.post(
         Uri.parse(getUrl()),
@@ -44,7 +65,11 @@ class JournalService {
     print(response.statusCode);
     print(response.body);
     return response.statusCode == 201;
-
+  }
+  
+  Future<bool> delete(String id) async {
+    http.Response response = await http.delete(Uri.parse("${getUrl()}/$id"));
+    return response.statusCode == 200;
   }
 
 }

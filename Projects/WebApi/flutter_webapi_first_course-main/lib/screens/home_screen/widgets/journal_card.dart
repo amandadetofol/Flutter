@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webapi_first_course/helpers/weekday.dart';
 import 'package:flutter_webapi_first_course/models/journal.dart';
+import 'package:flutter_webapi_first_course/screens/commons/dialog.dart';
+import 'package:flutter_webapi_first_course/services/journal_service.dart';
 import 'package:uuid/uuid.dart';
 
 class JournalCard extends StatelessWidget {
@@ -8,14 +10,17 @@ class JournalCard extends StatelessWidget {
   final DateTime showedDate;
   final Function refresh;
 
-  const JournalCard({Key? key, this.journal, required this.showedDate, required this.refresh})
+  const JournalCard(
+      {Key? key, this.journal, required this.showedDate, required this.refresh})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     if ((journal?.content?.length ?? 0) > 1) {
       return InkWell(
-        onTap: () {},
+        onTap: () {
+          goToDetails(context, journal);
+        },
         child: Container(
           height: 115,
           margin: const EdgeInsets.all(8),
@@ -76,6 +81,11 @@ class JournalCard extends StatelessWidget {
                   ),
                 ),
               ),
+              IconButton(
+                  onPressed: () {
+                    _deleteJournal(context);
+                  },
+                  icon: Icon(Icons.delete))
             ],
           ),
         ),
@@ -83,24 +93,7 @@ class JournalCard extends StatelessWidget {
     } else {
       return InkWell(
         onTap: () {
-          Navigator.pushNamed(
-              context,
-              "add-journal",
-              arguments: Journal(
-                  id: const Uuid().v1(),
-                  content: "",
-                  createdAt: showedDate,
-                  updatedAt: showedDate)).then((value) {
-
-                    if (value != null && value == true){
-                      refresh();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Registro feito com sucesso!"),
-                          backgroundColor: Colors.green,)
-                      );
-                    }
-          });
+          goToDetails(context, null);
         },
         child: Container(
           height: 115,
@@ -113,5 +106,61 @@ class JournalCard extends StatelessWidget {
         ),
       );
     }
+  }
+
+  _deleteJournal(BuildContext context) async {
+    showConfirmationDialog(
+            context,
+            DialogModel(
+                description: "Deseja realmente excluir essa informação?",
+                confirmation: "remover"))
+        .then((value) async {
+      if (value != null) {
+        if (value) {
+          JournalService service = JournalService();
+          bool operationSucceded = await service.delete(journal?.id ?? "");
+
+          if (operationSucceded) {
+            refresh();
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Registro removido!"),
+              backgroundColor: Colors.greenAccent,
+            ));
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Algo deu errado!"),
+              backgroundColor: Colors.red,
+            ));
+          }
+        }
+      }
+    });
+  }
+
+  void goToDetails(BuildContext context, Journal? journal) {
+    Journal innerJournal = journal ??
+        Journal(
+            id: const Uuid().v1(),
+            content: "",
+            createdAt: showedDate,
+            updatedAt: showedDate);
+
+    if (journal != null) {
+      journal = innerJournal;
+    }
+
+    Map<String, dynamic> map = {};
+    map['journal'] = innerJournal;
+    map['is_editing'] = journal?.content.isEmpty ?? false;
+
+    Navigator.pushNamed(context, "add-journal", arguments: map).then((value) {
+      if (value != null && value == true) {
+        refresh();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Registro feito com sucesso!"),
+          backgroundColor: Colors.green,
+        ));
+      }
+    });
   }
 }

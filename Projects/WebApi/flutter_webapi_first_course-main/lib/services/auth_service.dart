@@ -34,7 +34,22 @@ class AuthService {
   }
 
   Future<bool> register({required String email, required String password}) async {
-   return true;
+    String user = json.encode({
+      'email': email,
+      'password': password,
+    });
+
+    http.Response response = await http.post(
+      Uri.parse("${url}register"),
+      headers: {'Content-type': 'application/json'},
+      body: user,
+    );
+
+    if (response.statusCode != 201) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
 }

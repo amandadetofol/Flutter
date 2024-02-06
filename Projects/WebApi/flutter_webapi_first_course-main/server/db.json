@@ -4,6 +4,11 @@
       "email": "teste@gmail.com",
       "password": "$2a$10$ylRIAXlQBi5GiU7htR8BGu7Xcp7pVph3SK8JFblUbxJp8CCHO3aCy",
       "id": 1
+    },
+    {
+      "email": "12@12.com",
+      "password": "$2a$10$3jYIR4aFNDPIR6/c1T.2Kuhd9TckhBoRuYKS5LLGo926rslGxAUau",
+      "id": 2
     }
   ],
   "learnhttp": {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webapi_first_course/models/journal.dart';
 import 'package:flutter_webapi_first_course/screens/add_new_journal_screen/add_new_journal_screen.dart';
+import 'package:flutter_webapi_first_course/screens/login/login_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'screens/home_screen/home_screen.dart';
 
@@ -28,9 +29,10 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.bitterTextTheme()),
       darkTheme: ThemeData.dark(),
       themeMode: ThemeMode.light,
-      initialRoute: "home",
+      initialRoute: "login",
       routes: {
         "home": (context) => const HomeScreen(),
+        "login": (context) => LoginScreen(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == "add-journal") {

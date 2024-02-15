@@ -9,9 +9,16 @@ class JournalCard extends StatelessWidget {
   final Journal? journal;
   final DateTime showedDate;
   final Function refresh;
+  final int userId;
+  final String token;
 
   const JournalCard(
-      {Key? key, this.journal, required this.showedDate, required this.refresh})
+      {Key? key,
+      this.journal,
+      required this.showedDate,
+      required this.refresh,
+      required this.userId,
+      required this.token})
       : super(key: key);
 
   @override
@@ -118,7 +125,8 @@ class JournalCard extends StatelessWidget {
       if (value != null) {
         if (value) {
           JournalService service = JournalService();
-          bool operationSucceded = await service.delete(journal?.id ?? "");
+          bool operationSucceded =
+              await service.delete(journal?.id ?? "", id: userId, token: token);
 
           if (operationSucceded) {
             refresh();
@@ -143,7 +151,8 @@ class JournalCard extends StatelessWidget {
             id: const Uuid().v1(),
             content: "",
             createdAt: showedDate,
-            updatedAt: showedDate);
+            updatedAt: showedDate,
+            userId: userId);
 
     if (journal != null) {
       journal = innerJournal;
@@ -151,7 +160,11 @@ class JournalCard extends StatelessWidget {
 
     Map<String, dynamic> map = {};
     map['journal'] = innerJournal;
-    map['is_editing'] = journal?.content.isEmpty ?? false;
+    map['is_editing'] = journal?.content != null;
+    map['token'] = token;
+    map['userId'] = userId;
+
+    print(journal?.content != null);
 
     Navigator.pushNamed(context, "add-journal", arguments: map).then((value) {
       if (value != null && value == true) {

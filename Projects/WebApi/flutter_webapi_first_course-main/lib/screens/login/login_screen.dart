@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_webapi_first_course/screens/commons/dialog.dart';
 import 'package:flutter_webapi_first_course/services/auth_service.dart';
@@ -18,7 +20,7 @@ class LoginScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         margin: const EdgeInsets.all(32),
         decoration:
-            BoxDecoration(border: Border.all(width: 8), color: Colors.white),
+        BoxDecoration(border: Border.all(width: 8), color: Colors.white),
         child: Form(
           child: Center(
             child: SingleChildScrollView(
@@ -73,6 +75,9 @@ class LoginScreen extends StatelessWidget {
 
     try {
       bool result = await service.login(email: email, password: password);
+      if (result) {
+        Navigator.pushNamed(context, "home");
+      }
     } on UserNotFoundException {
       showConfirmationDialog(
           context,
@@ -96,6 +101,8 @@ class LoginScreen extends StatelessWidget {
           }
         }
       });
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
     }
 
   }

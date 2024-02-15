@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_webapi_first_course/database/database.dart';
 import 'package:flutter_webapi_first_course/screens/add_new_journal_screen/add_new_journal_screen.dart';
 import 'package:flutter_webapi_first_course/screens/home_screen/widgets/home_screen_list.dart';
 import 'package:flutter_webapi_first_course/services/journal_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/journal.dart';
 
@@ -19,6 +19,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Tamanho da lista
   int windowPage = 10;
+  int? userId;
+  String? userToken;
 
   // A base de dados mostrada na lista
   Map<String, Journal> database = {};
@@ -38,34 +40,72 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(onPressed: (){
-            refresh();
-          }, icon: Icon(Icons.refresh))
+          IconButton(
+              onPressed: () {
+                refresh();
+              },
+              icon: Icon(Icons.refresh))
         ],
-        // Título basado no dia atual
         title: Text(
           "${currentDay.day}  |  ${currentDay.month}  |  ${currentDay.year}",
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            ListTile(
+              title: const Text("Sair"),
+              leading: const Icon(Icons.logout_outlined),
+              onTap: () {
+                _logout();
+              },
+            ),
+          ],
         ),
       ),
       body: ListView(
         controller: _listScrollController,
         children: generateListJournalCards(
-          windowPage: windowPage,
-          currentDay: currentDay,
-          database: database,
-          refreshFunction: refresh,
-        ),
+            windowPage: windowPage,
+            currentDay: currentDay,
+            database: database,
+            refreshFunction: refresh,
+            userId: userId ?? 0,
+            userToken: userToken ?? ""),
       ),
     );
   }
 
-  void refresh() async {
-    List<Journal> journals = await service.getAll();
-    setState(() {
-      database = {};
-      journals.forEach((element) {
-        database[element.id] = element;
-      });
+  void refresh() {
+    SharedPreferences.getInstance().then((sharedPreferences) async {
+      String? token = sharedPreferences.getString("accessToken");
+      String? email = sharedPreferences.getString("email");
+      int? id = sharedPreferences.getInt("id");
+
+      if (token != null && email != null && id != null) {
+        setState(() {
+          userId = id;
+          userToken = token;
+        });
+
+        List<Journal> journals = await service.getAll(id: id, token: token);
+        setState(() {
+          database = {};
+          journals.forEach((element) {
+            database[element.id] = element;
+          });
+        });
+      } else {
+        Navigator.pushReplacementNamed(context, "login");
+      }
     });
   }
+
+  _logout(){
+    SharedPreferences.getInstance().then((sharedPreferences) {
+      sharedPreferences.clear();
+      Navigator.pushReplacementNamed(context, "login");
+    });
+  }
+
 }

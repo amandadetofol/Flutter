@@ -3,14 +3,26 @@ import 'package:flutter_webapi_first_course/models/journal.dart';
 import 'package:flutter_webapi_first_course/screens/add_new_journal_screen/add_new_journal_screen.dart';
 import 'package:flutter_webapi_first_course/screens/login/login_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/home_screen/home_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  bool isLogged = await verifyToken();
+  runApp(MyApp(isLogged: isLogged));
+}
+
+Future<bool> verifyToken() async {
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  String? token = sharedPreferences.getString("accessToken");
+  return token!=null;
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+
+  final bool isLogged;
+  const MyApp({Key? key, required this.isLogged}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +52,15 @@ class MyApp extends StatelessWidget {
 
           final Journal journal = map['journal'] as Journal;
           final bool isEditing = map['is_editing'] as bool;
+          final String token = map['token'] as String;
+          final int userId = map['userId'] as int;
 
           return MaterialPageRoute(builder: (context){
             return AddNewJournalScreen(
               journal: journal,
-              isEditing: isEditing);
+              isEditing: isEditing,
+              token: token,
+              userId: userId);
           });
         }
         return null;

@@ -1,8 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_webapi_first_course/helpers/weekday.dart';
 import 'package:flutter_webapi_first_course/models/journal.dart';
 import 'package:flutter_webapi_first_course/services/journal_service.dart';
+import '../../helpers/logout.dart';
+import '../commons/dialog.dart';
 
 class AddNewJournalScreen extends StatelessWidget {
   final Journal journal;
@@ -12,7 +14,11 @@ class AddNewJournalScreen extends StatelessWidget {
   final TextEditingController _contentController = TextEditingController();
 
   AddNewJournalScreen(
-      {super.key, required this.journal, required this.isEditing, required this.token, required this.userId});
+      {super.key,
+      required this.journal,
+      required this.isEditing,
+      required this.token,
+      required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -53,13 +59,22 @@ class AddNewJournalScreen extends StatelessWidget {
     if (!isEditing) {
       service.register(journal, id: id, token: token).then((value) {
         Navigator.pop(context, value);
-      });
+      }).catchError((error) {
+        logout(context);
+      }, test: (error) => error is TokenNotValidException).catchError((error) {
+        var innerError = error as HttpException;
+        showExceptionDialog(context, innerError.message);
+      }, test: (error) => error is HttpException);
+      ;
     } else {
-      service
-          .edit(journal.id, journal, id: id, token: token)
-          .then((value) {
+      service.edit(journal.id, journal, id: id, token: token).then((value) {
         Navigator.pop(context, value);
-      });
+      }).catchError((error) {
+        logout(context);
+      }, test: (error) => error is TokenNotValidException).catchError((error) {
+        var innerError = error as HttpException;
+        showExceptionDialog(context, innerError.message);
+      }, test: (error) => error is HttpException);
     }
   }
 }

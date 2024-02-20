@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:http_interceptor/http/intercepted_client.dart';
-
 import '../models/journal.dart';
 
 class JournalService {
@@ -25,24 +23,22 @@ class JournalService {
 
     List<Journal> list = [];
     List<dynamic> dynamicList = json.decode(response.body);
-    dynamicList.forEach((element) {
+    for (var element in dynamicList) {
       var journal = Journal.fromMap(element);
       list.add(journal);
-    });
-    print(list.length);
-
+    }
     return list;
   }
 
   Future<bool> edit(String journalId, Journal journal,
       {required int id, required String token}) async {
+
     String jsonJournal = json.encode({
       'id': journal.id,
       'content': journal.content,
       'created_at': journal.createdAt.toString(),
-      'updated_at': journal.updatedAt.toString(),
+      'updated_at': DateTime.now().toString(),
     });
-
 
     var href = "$url/users/$id/$resource/$journalId";
 

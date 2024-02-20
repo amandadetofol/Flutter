@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_webapi_first_course/screens/commons/dialog.dart';
 import 'package:flutter_webapi_first_course/services/auth_service.dart';
@@ -7,8 +5,8 @@ import 'package:flutter_webapi_first_course/services/auth_service.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
 
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   AuthService service = AuthService();
 
@@ -76,9 +74,11 @@ class LoginScreen extends StatelessWidget {
     try {
       bool result = await service.login(email: email, password: password);
       if (result) {
+        // ignore: use_build_context_synchronously
         Navigator.pushNamed(context, "home");
       }
     } on UserNotFoundException {
+      // ignore: use_build_context_synchronously
       showConfirmationDialog(
           context,
           DialogModel(
@@ -102,6 +102,7 @@ class LoginScreen extends StatelessWidget {
         }
       });
     } catch (error) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
     }
 

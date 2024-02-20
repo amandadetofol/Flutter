@@ -23,8 +23,9 @@ class Journal {
         updatedAt = DateTime.parse(map["updated_at"]);
 
   Journal.empty({required int userId})
-      : id = Uuid().v1(),
+      : id = const Uuid().v1(),
         content = "",
+        // ignore: prefer_initializing_formals
         userId = userId,
         createdAt = DateTime.now(),
         updatedAt = DateTime.now();
